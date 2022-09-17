@@ -11,6 +11,8 @@ import RegistrationForm from "./RegistrationForm";
 import LoginForm from "./LoginForm";
 import EditeForm from "./EditeForm";
 import UserList from "./UserList";
+import PostsvPage from "./PostsPage";
+import PostsPage from "./PostsPage";
 
 function App() {
   const [modalIsOpen, setIsOpen] = useState(false);
@@ -39,6 +41,7 @@ function App() {
           <Route path='/' element={<UserList modalIsOpen={modalIsOpen} setIsOpen={setIsOpen} userToEdite={userToEdite} setUserToEdite={setUserToEdite} />} />
           <Route path='/about' element={<div>About page</div>} />
           <Route path='/contact' element={<div>Contact page</div>} />
+          <Route path='/posts' element={<PostsPage />} />
           <Route path='/logout' element={<div>Logout page</div>} />
         </Routes>
         <ReactModal

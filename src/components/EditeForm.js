@@ -1,15 +1,43 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Form, Button } from 'react-bootstrap';
+import axios from 'axios';
 
 function EditeForm({ modalIsOpen, setIsOpen, userToEdite, setUserToEdite }) {
     const posibleCountries = ['', 'Ukraine', 'Poland', 'Deutch'];
     const posibleHobbies = ['Sport', 'Films', 'Books', 'Drowing'];
+
+  const [username, setUsername] = useState('');
+  const[sex, setSex] = useState('');
+  const[country, setCountry] = useState('');
+  const[hobby, setHobby] = useState([])
+  const[birthdate, setBirthdate] = useState(new Date())
+
     const onFormSubmit = (event) => {
         event.preventDefault();
+        axios.post(`http://127.0.0.1:3003/users/update`, {
+            _id: userToEdite._id,
+            username,
+            sex,
+            country,
+            hobby,
+            birthdate
+
+    }, {
+            headers: {
+                'Authorization': localStorage.getItem('token') ?? ''
+            }
+        }).then(response => {
+            //
+         });
         setIsOpen(false);
     };
     useEffect(() => {
-        console.log(userToEdite);
+        
+      setUsername(userToEdite.username);
+      setSex(userToEdite.sex  ?? '');
+      setCountry(userToEdite.country ?? '') ;
+      setHobby(userToEdite.hobby ?? []);
+      setBirthdate(userToEdite.birthdate  ?? new Date());
     }, [userToEdite]);
     return (
         <>
@@ -20,8 +48,8 @@ function EditeForm({ modalIsOpen, setIsOpen, userToEdite, setUserToEdite }) {
                     <Form.Control
                         name='name'
                         type='text'
-                        value={userToEdite.username}
-                        onChange={event => {}}
+                        value={username}
+                        onChange={event => {setUsername(event.target.value)}}
                     />
                 </Form.Group>
                 
@@ -31,15 +59,15 @@ function EditeForm({ modalIsOpen, setIsOpen, userToEdite, setUserToEdite }) {
                         label='Male'
                         name='sex'
                         type='radio'
-                        checked={userToEdite.sex === 'Male' ? true : false}
-                        onChange={event => {}}
+                        checked={sex === 'Male' ? true : false}
+                        onChange={event => { setSex('Male') }}
                     />
                     <Form.Check
                         label='Famale'
                         name='sex'
                         type='radio'
                         checked={userToEdite.sex === 'Famale' ? true : false}
-                        onChange={event => {}}
+                        onChange={event => { setSex('Famale')}}
                     />
                 </Form.Group>
 
@@ -47,8 +75,8 @@ function EditeForm({ modalIsOpen, setIsOpen, userToEdite, setUserToEdite }) {
                     <Form.Label>Country</Form.Label>
                     <Form.Select
                         name='country'
-                        value={userToEdite.country}
-                        onChange={event => {}}
+                        value={country}
+                        onChange={event => {setCountry(event.target.value)}}
                     >
                         {posibleCountries.map((country, index) =>
                             <option key={index} value={country}>{country}</option>)}
@@ -57,14 +85,20 @@ function EditeForm({ modalIsOpen, setIsOpen, userToEdite, setUserToEdite }) {
 
                 <Form.Group className='mb-3' controlId='formHobby'>
                     <Form.Label>Hobby</Form.Label>
-                    {posibleHobbies.map((hobby, index) =>
+                    {posibleHobbies.map((pHobby, index) =>
                         <Form.Check
                             key={index}
-                            label={hobby}
+                            label={pHobby}
                             name='hobby'
                             type='switch'
-                            checked={userToEdite.hobby.includes(hobby) ? true : false}
-                            onChange={event => {}}
+                            checked={hobby.includes(pHobby) ? true : false}
+                            onChange={event => {
+                                if(hobby.includes(pHobby))
+                                setHobby(hobby.filter(item => item !== pHobby));
+                                else
+                                setHobby([...hobby, pHobby]);
+                                  
+                            }}
                         />)}
                 </Form.Group>
 
@@ -73,8 +107,8 @@ function EditeForm({ modalIsOpen, setIsOpen, userToEdite, setUserToEdite }) {
                     <Form.Control
                         type='date'
                         name='birthdate'
-                      
-                        onChange={event => {}}
+                        value={new Date(birthdate).toISOString().substring(0, 10)}
+                        onChange={event => {setBirthdate(event.target.value); }}
                     />
                 </Form.Group>
 

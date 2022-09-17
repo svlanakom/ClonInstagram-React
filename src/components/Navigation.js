@@ -28,6 +28,7 @@ function Navigation({ modalIsOpen, setIsOpen, isLogin, setIsLogin }) {
                         <Link className="nav-link" to="/">Home</Link>
                         <Link className="nav-link" to="/about">About</Link>
                         <Link className="nav-link" to="/contact">Contact</Link>
+                        <Link className="nav-link" to="/posts">Posts</Link>
                     </Nav>
                     <Nav>
                         {

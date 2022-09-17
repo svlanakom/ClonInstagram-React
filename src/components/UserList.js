@@ -1,6 +1,6 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
-import { ListGroup, ListGroupItem, Button } from "react-bootstrap";
+import { ListGroup, ListGroupItem, Button, Table } from "react-bootstrap";
 import { Link } from 'react-router-dom';
 
 function UserList({ modalIsOpen, setIsOpen, userToEdite, setUserToEdite }) {
@@ -34,10 +34,25 @@ function UserList({ modalIsOpen, setIsOpen, userToEdite, setUserToEdite }) {
     };
 
     return (
-        <ListGroup>
-            {users.map((user) =>
-                <ListGroupItem key={user._id}>
-                    {user.email}
+        <>
+       
+        <Table striped bordered hover className="mt-3">
+      <thead>
+        <tr>
+          <th>Username</th>
+          <th>Email</th>
+          <th></th>
+          
+        </tr>
+      </thead>
+      <tbody>
+      {users.map((user) =>
+                <tr key={user._id}>
+                    <td> {user.username}</td>
+                    <td> {user.email}</td>
+                   <td>
+
+                   
                         <Button
                             variant='danger'
                             data-email={user.email}
@@ -53,8 +68,18 @@ function UserList({ modalIsOpen, setIsOpen, userToEdite, setUserToEdite }) {
                         >
                             Edite
                         </Link>
-                </ListGroupItem>)}
-        </ListGroup>
+                        </td>
+                </tr>)}
+     
+     
+      </tbody>
+    </Table>
+
+
+       
+           
+       
+        </>
     );
 }
 
