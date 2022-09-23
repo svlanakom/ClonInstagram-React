@@ -60,14 +60,14 @@ function EditeForm({ modalIsOpen, setIsOpen, userToEdite, setUserToEdite }) {
                         name='sex'
                         type='radio'
                         checked={sex === 'Male' ? true : false}
-                        onChange={event => { setSex('Male') }}
+                        onChange={()=> { setSex('Male') }}
                     />
                     <Form.Check
                         label='Famale'
                         name='sex'
                         type='radio'
-                        checked={userToEdite.sex === 'Famale' ? true : false}
-                        onChange={event => { setSex('Famale')}}
+                        checked={sex === 'Famale' ? true : false}
+                        onChange={() => { setSex('Famale') }}
                     />
                 </Form.Group>
 
@@ -115,6 +115,9 @@ function EditeForm({ modalIsOpen, setIsOpen, userToEdite, setUserToEdite }) {
                 <Button variant='primary' type='submit'>
                     Submit
                 </Button>
+                <Button variant='danger' type='button' className='ms-2' onClick={() => setIsOpen(false)}>
+               Cancel
+            </Button>
             </Form>
         </>
     );

@@ -1,6 +1,6 @@
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
-import { ListGroup, ListGroupItem, Button, Table } from "react-bootstrap";
+import { Button, Table } from "react-bootstrap";
 import { Link } from 'react-router-dom';
 
 function UserList({ modalIsOpen, setIsOpen, userToEdite, setUserToEdite }) {
@@ -61,7 +61,7 @@ function UserList({ modalIsOpen, setIsOpen, userToEdite, setUserToEdite }) {
                             Delete
                         </Button>
                         <Link
-                            className='btn btn-primary'
+                            className='btn btn-primary mx-1'
                             to='/edite'
                             data-email={user.email}
                             onClick={editeUser}

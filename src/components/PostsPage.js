@@ -3,11 +3,13 @@ import CreatePostForm from "./CreatePostForm";
 import PostList from "./PostList";
 
 
-function PostsPage() {
+function PostsPage({modalIsOpen, setIsOpen, postToEdite, setPostToEdite}) {
     return (
+        
         <>
+       
         <CreatePostForm />
-        <PostList />
+        <PostList modalIsOpen={modalIsOpen} setIsOpen={setIsOpen} postToEdite={postToEdite} setPostToEdite={setPostToEdite}/>
        </>
     )
 }
