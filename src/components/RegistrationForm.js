@@ -1,69 +1,169 @@
-import React, { useState } from "react";
+import React, { useState} from "react";
 import { Form, Button } from "react-bootstrap";
 import axios from "axios";
+import { Formik, Form as FormikForm, Field, ErrorMessage } from 'formik';
+import * as Yup from 'yup';
+import {port} from '../config'
 
 function RegistrationForm({ modalIsOpen, setIsOpen }) {
-    const [email, setEmail] = useState("");
-    const [username, setUsername] = useState("");
-    const [password, setPassword] = useState("");
-    const [confirmPassword, setConfirmPassword] = useState("");
+    const[emailAvaiable, setEmailAvaiable] = useState(true)
+    const SignUpSchema = Yup.object().shape({
+        email: Yup.string()
+            .email()
+            .required("Email is required")
+            // .test('Unique Email', 'Email already in use',
+            //     function (value) {
+            //         return new Promise((resolve, reject) => {
+            //             axios.get(`${port}/users/available/${value}`)
+            //                 .then((response) => {
+            //                     resolve(response.data);
+            //                 })
+            //         })
+            //     }
+            // )
+            ,
 
-    function onFormSubmit(event) {
-        event.preventDefault();
-        axios.post('http://127.0.0.1:3003/users/add', {
-            email, username, password
-        }).then(response => {
+        username: Yup.string()
+            .min(2, "Too Short!")
+            .max(50, "Too Long!")
+            .required("Username is required"),
+
+        password: Yup.string()
+            .matches(/\d+/, {message: "Digits only"})
+            .required("Password is required")
+            .min(6, "Password is too short - should be 6 chars minimum"),
+
+        confirmPassword: Yup.string()
+            .required()
+            .oneOf([Yup.ref('password'), null], 'Passwords must match'),
+    });
+
+    const initialValues = {
+        email: '',
+        username: '',
+        password: '',
+        confirmPassword: ''
+    };
+
+    async function onFormSubmit(values, { setSubmitting, resetForm }) {
+        setSubmitting(true);
+        const response = await axios.post(`${port}/users/add`,
+            values
+        );
+        if (Object.keys(response.data).length > 0) {
             console.log(response.data);
             setIsOpen(false);
-        });
+            resetForm();
+        } else {
+            setEmailAvaiable(false);
+        }
+        setSubmitting(false);
     }
 
     return (
-        <Form onSubmit={onFormSubmit}>
-            <Form.Group className="mb-3" controlId="formEmail">
-                <Form.Label>Email address</Form.Label>
-                <Form.Control
-                    type="email"
-                    placeholder="Enter email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                />
-            </Form.Group>
+        <Formik
+            onSubmit={onFormSubmit}
+            initialValues={initialValues}
+            validationSchema={SignUpSchema}
+        >
+            {(formik) => {
+                const { values,
+                    errors,
+                    touched,
+                    handleChange,
+                    handleBlur,
+                    handleSubmit,
+                    isValid,
+                    dirty } = formik;
+                return (
+                    <FormikForm onSubmit={handleSubmit}>
+                        <Form.Group className="mb-3" controlId="formEmail">
+                            <Form.Label>Email address</Form.Label>
+                            <Field
+                                className="form-control"
+                                name="email"
+                                type="email"
+                                placeholder="Enter email"
+                                value={values.email}
+                                onChange={(e) => {
+                                     setEmailAvaiable(true)
+                                     return  handleChange(e);
 
-            <Form.Group className="mb-3" controlId="formName">
-                <Form.Label>Name</Form.Label>
-                <Form.Control
-                    type="text"
-                    placeholder="Enter name"
-                    value={username}
-                    onChange={(e) => setUsername(e.target.value)}
-                />
-            </Form.Group>
 
-            <Form.Group className="mb-3" controlId="formPassword">
-                <Form.Label>Password</Form.Label>
-                <Form.Control
-                    type="password"
-                    placeholder="Password"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                />
-            </Form.Group>
+                                }}
+                                onBlur={handleBlur}
+                            />
+                            {errors.email && touched.email &&
+                                <ErrorMessage name="email" component='div' className='alert alert-danger mt-2' />
+                            }
+                            {
+                                !emailAvaiable && 
+                                <div className='alert alert-danger mt-2'>Email already is used</div>
 
-            <Form.Group className="mb-3" controlId="formConfirmPassword">
-                <Form.Label>Confirm password</Form.Label>
-                <Form.Control
-                    type="password"
-                    placeholder="Confirm password"
-                    value={confirmPassword}
-                    onChange={(e) => setConfirmPassword(e.target.value)}
-                />
-            </Form.Group>
 
-            <Button variant="primary" type="submit">
-                Submit
-            </Button>
-        </Form>
+                            }
+                        </Form.Group>
+
+                        <Form.Group className="mb-3" controlId="formName">
+                            <Form.Label>Name</Form.Label>
+                            <Field
+                                className="form-control"
+                                name="username"
+                                type="text"
+                                placeholder="Enter name"
+                                value={values.username}
+                                onChange={handleChange}
+                                onBlur={handleBlur}
+                            />
+                            {errors.username && touched.username &&
+                                <ErrorMessage name="username" component='div' className='alert alert-danger mt-2' />
+                            }
+                        </Form.Group>
+
+                        <Form.Group className="mb-3" controlId="formPassword">
+                            <Form.Label>Password</Form.Label>
+                            <Field
+                                className="form-control"
+                                name="password"
+                                type="password"
+                                placeholder="Password"
+                                value={values.password}
+                                onChange={handleChange}
+                                onBlur={handleBlur}
+                            />
+                            {errors.password && touched.password &&
+                                <ErrorMessage name="password" component='div' className='alert alert-danger mt-2' />
+                            }
+                        </Form.Group>
+
+                        <Form.Group className="mb-3" controlId="formConfirmPassword">
+                            <Form.Label>Confirm password</Form.Label>
+                            <Field
+                                className="form-control"
+                                name="confirmPassword"
+                                type="password"
+                                placeholder="Confirm password"
+                                value={values.confirmPassword}
+                                onChange={handleChange}
+                                onBlur={handleBlur}
+                            />
+                            {errors.confirmPassword && touched.confirmPassword &&
+                                <ErrorMessage name="confirmPassword" component='div' className='alert alert-danger mt-2' />
+                            }
+                        </Form.Group>
+
+                        <Button
+                            variant="primary"
+                            type="submit"
+                            className={dirty && isValid ? "" : "disabled-btn"}
+                            disabled={!(dirty && isValid)}
+                        >
+                            Submit
+                        </Button>
+                    </FormikForm>
+                );
+            }}
+        </Formik>
     );
 }
 

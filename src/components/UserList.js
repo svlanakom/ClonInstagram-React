@@ -2,23 +2,26 @@ import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import { Button, Table } from "react-bootstrap";
 import { Link } from 'react-router-dom';
+import {port} from '../config'
 
 function UserList({ modalIsOpen, setIsOpen, userToEdite, setUserToEdite }) {
     const [users, setUsers] = useState([]);
 
     useEffect(() => {
-        axios.get(`http://127.0.0.1:3003/users/get`, {
+        axios.get(`${port}/users/get`, {
             headers: {
                 'Authorization': localStorage.getItem('token') ?? ''
             }
         }).then(response => {
             setUsers(response.data);
+        }).catch(error => {
+            console.log(error.response?.status)
         });
     }, []);
 
     const deleteUser = (event) => {
         const email = event.target.dataset.email;
-        axios.delete(`http://127.0.0.1:3003/users/delete/${email}`, {
+        axios.delete(`${port}/users/delete/${email}`, {
             headers: {
                 'Authorization': localStorage.getItem('token') ?? ''
             }

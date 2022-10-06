@@ -1,6 +1,7 @@
 import React, { useEffect,  useState } from "react";
 import { Form, Button, Figure } from 'react-bootstrap';
 import axios from "axios";
+import {port} from '../config'
 
 
 function EditePostForm({ modalIsOpen, setIsOpen, postToEdite, setPostToEdite }) {
@@ -13,7 +14,7 @@ function EditePostForm({ modalIsOpen, setIsOpen, postToEdite, setPostToEdite }) 
     const onFormSubmit = (event) => {
         event.preventDefault();
         const formData = new FormData(event.target);
-        axios.post(`http://localhost:3003/editpost/${postToEdite._id}` , formData,  {
+        axios.post(`${port}/${postToEdite._id}` , formData,  {
     
             headers: {
                 'Authorization': localStorage.getItem('token') ?? ''
@@ -67,8 +68,8 @@ function EditePostForm({ modalIsOpen, setIsOpen, postToEdite, setPostToEdite }) 
                 <Figure className='mt-3'>
                     <Figure.Image
                     width={180}
-                    height={100}
-                    src={`http://127.0.0.1:3003/${postToEdite.imagePath}`}
+                
+                    src={`${port}/${postToEdite.imagePath}`}
                    alt={postToEdite.title}
                    />
 

@@ -1,13 +1,24 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { Card, Col, Row } from 'react-bootstrap';
+import { Card, Col, Row, Button } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
+import {port} from '../config'
 
 function PostList({ modalIsOpen, setIsOpen, postToEdite, setPostToEdite }) {
     const [posts, setPosts] = useState([]);
 
+    const deletePost = (event) => {
+        axios.delete(`${port}/${event.target.dataset.id}`, {
+            headers: {
+                'Authorization': localStorage.getItem('token') ?? ''
+            }
+        });
+    
+
+    };
+
     useEffect(() => {
-        axios.get(`http://127.0.0.1:3003/posts`, {
+        axios.get(`${port}/posts`, {
             headers: {
                 'Authorization': localStorage.getItem('token') ?? ''
             }
@@ -22,7 +33,7 @@ function PostList({ modalIsOpen, setIsOpen, postToEdite, setPostToEdite }) {
                 {posts.map(post =>
                     <Col>
                         <Card key={post._id} >
-                            <Card.Img variant="top" src={`http://127.0.0.1:3003/${post.imagePath}`} alt={post.title} />
+                            <Card.Img variant="top" src={`${port}/${post.imagePath}`} alt={post.title} />
                             <Card.Body>
                                 <Card.Title>{post.title}</Card.Title>
                                 <Card.Text>{post.description}</Card.Text>
@@ -36,6 +47,15 @@ function PostList({ modalIsOpen, setIsOpen, postToEdite, setPostToEdite }) {
                                 >
                                     Edit
                                 </Link>
+                                <Button 
+                                variant='danger'
+                                 data-id={post._id}
+                                 onClick={deletePost}>
+
+
+                                    Delete
+
+                                </Button>
 
 
 

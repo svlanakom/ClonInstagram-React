@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { Form, Button } from 'react-bootstrap';
 import axios from 'axios';
+import { port } from '../config';
+
 
 function EditeForm({ modalIsOpen, setIsOpen, userToEdite, setUserToEdite }) {
     const posibleCountries = ['', 'Ukraine', 'Poland', 'Deutch'];
@@ -14,7 +16,7 @@ function EditeForm({ modalIsOpen, setIsOpen, userToEdite, setUserToEdite }) {
 
     const onFormSubmit = (event) => {
         event.preventDefault();
-        axios.post(`http://127.0.0.1:3003/users/update`, {
+        axios.post(`${port}/users/update`, {
             _id: userToEdite._id,
             username,
             sex,

@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Form, Button } from "react-bootstrap";
 import axios from "axios";
+import {port} from "../config"
 
 function LoginForm({ modalIsOpen, setIsOpen, isLogin, setIsLogin }) {
     const [email, setEmail] = useState("");
@@ -8,7 +9,7 @@ function LoginForm({ modalIsOpen, setIsOpen, isLogin, setIsLogin }) {
 
     function onFormSubmit(event) {
         event.preventDefault();
-        axios.post('http://127.0.0.1:3003/users/login', {
+        axios.post(`${port}/users/login`, {
             email, password
         }).then(response => {
             console.log(response.data);

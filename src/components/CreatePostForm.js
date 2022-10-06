@@ -1,6 +1,7 @@
 import axios from "axios";
 import React from "react";
-import { Form, Button } from 'react-bootstrap'
+import { Form, Button } from 'react-bootstrap';
+import {port} from '../config'
 
 
 function CreatePostForm() {
@@ -8,7 +9,7 @@ function CreatePostForm() {
   const onFormSubmit= ( event ) => {
     event.preventDefault();
     const formData = new FormData(event.target);
-    axios.post("http://localhost:3003/createpost",  formData, {
+    axios.post(`${port}/createpost`,  formData, {
         headers: {
             'Authorization': localStorage.getItem('token') ?? ''
 
@@ -28,8 +29,7 @@ function CreatePostForm() {
             <Form.Control
                 name='title'
                 type='text'
-                // value={title}
-                // onChange={event => {setUsername(event.target.value)}}
+              
             />
         </Form.Group>
         <Form.Group className='mb-3' controlId='formDescription'>
@@ -37,8 +37,7 @@ function CreatePostForm() {
             <Form.Control
                 name='description'
                 type='text'
-            //    value={description}
-                // onChange={event => {setUsername(event.target.value)}}
+           
             />
         </Form.Group>
         
@@ -48,8 +47,7 @@ function CreatePostForm() {
                
                 name='image'
                 type='file'
-                // checked={sex === 'Male' ? true : false}
-                // onChange={()=> { setSex('Male') }}
+               
             />
            
         </Form.Group>
