@@ -1,6 +1,5 @@
-# Visite my application
 
-[clone-instagram](https://inst-clone-react.herokuapp.com/)
+ # Visite my application: [clone-instagram](https://inst-clone-react.herokuapp.com/)
 
 # Technical scills
 
