@@ -1,22 +1,11 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { Container, Navbar, Nav } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
-import axios from "axios";
+import { useAuthState, useAuthDispatch } from '../context';
 
-function Navigation({ modalIsOpen, setIsOpen, isLogin, setIsLogin }) {
-    useEffect(() => {
-        const email = localStorage.getItem('email');
-        if (email) {
-            axios.get(`http://127.0.0.1:3003/users/get/${email}`, {
-                headers: {
-                    'Authorization': localStorage.getItem('token') ?? ''
-                }
-            }).then(response => {
-                if (Object.keys(response.data).length > 0)
-                    setIsLogin(true);
-            });
-        }
-    }, [setIsLogin]);
+function Navigation({ modalIsOpen, setIsOpen }) {
+    const authState = useAuthState();
+    const authDispatch = useAuthDispatch();
 
     return (
         <Navbar collapseOnSelect expand="lg" bg="info" variant="light">
@@ -32,17 +21,16 @@ function Navigation({ modalIsOpen, setIsOpen, isLogin, setIsLogin }) {
                     </Nav>
                     <Nav>
                         {
-                            !isLogin ?
-                            <>
-                                <Link className="nav-link" onClick={() => setIsOpen(true)} to="/login">Login</Link>
-                                <Link className="nav-link" onClick={() => setIsOpen(true)} to="/registration">Registration</Link>
-                            </>
-                            :
-                            <Nav.Link onClick={() => {
-                                setIsLogin(false);
-                                localStorage.removeItem('token');
-                                localStorage.removeItem('email');
-                            }}>Logout</Nav.Link>
+                            !authState.token ?
+                                <>
+                                    <Link className="nav-link" onClick={() => setIsOpen(true)} to="/login">Login</Link>
+                                    <Link className="nav-link" onClick={() => setIsOpen(true)} to="/registration">Registration</Link>
+                                </>
+                                :
+                                <Nav.Link onClick={() => {
+                                    authDispatch({ type: 'LOGOUT', payload: {} })
+                                    localStorage.removeItem('userData');
+                                }}>Logout</Nav.Link>
                         }
                     </Nav>
                 </Navbar.Collapse>

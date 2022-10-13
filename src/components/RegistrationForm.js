@@ -1,27 +1,27 @@
-import React, { useState} from "react";
+import React, { useState } from "react";
 import { Form, Button } from "react-bootstrap";
 import axios from "axios";
 import { Formik, Form as FormikForm, Field, ErrorMessage } from 'formik';
 import * as Yup from 'yup';
-import {port} from '../config'
+import { port } from '../config';
 
 function RegistrationForm({ modalIsOpen, setIsOpen }) {
-    const[emailAvaiable, setEmailAvaiable] = useState(true)
+    const [emailAvailable, setEmailAvailable] = useState(true);
+    
     const SignUpSchema = Yup.object().shape({
         email: Yup.string()
             .email()
             .required("Email is required")
-            // .test('Unique Email', 'Email already in use',
-            //     function (value) {
-            //         return new Promise((resolve, reject) => {
-            //             axios.get(`${port}/users/available/${value}`)
-            //                 .then((response) => {
-            //                     resolve(response.data);
-            //                 })
-            //         })
-            //     }
-            // )
-            ,
+            /*.test('Unique Email', 'Email already in use',
+                function (value) {
+                    return new Promise((resolve, reject) => {
+                        axios.get(`${port}/users/available/${value}`)
+                            .then((response) => {
+                                resolve(response.data);
+                            });
+                    })
+                }
+            )*/,
 
         username: Yup.string()
             .min(2, "Too Short!")
@@ -55,7 +55,7 @@ function RegistrationForm({ modalIsOpen, setIsOpen }) {
             setIsOpen(false);
             resetForm();
         } else {
-            setEmailAvaiable(false);
+            setEmailAvailable(false);
         }
         setSubmitting(false);
     }
@@ -86,21 +86,16 @@ function RegistrationForm({ modalIsOpen, setIsOpen }) {
                                 placeholder="Enter email"
                                 value={values.email}
                                 onChange={(e) => {
-                                     setEmailAvaiable(true)
-                                     return  handleChange(e);
-
-
+                                    setEmailAvailable(true);
+                                    return handleChange(e);
                                 }}
                                 onBlur={handleBlur}
                             />
                             {errors.email && touched.email &&
                                 <ErrorMessage name="email" component='div' className='alert alert-danger mt-2' />
                             }
-                            {
-                                !emailAvaiable && 
-                                <div className='alert alert-danger mt-2'>Email already is used</div>
-
-
+                            {!emailAvailable &&
+                                <div className='alert alert-danger mt-2'>Email already in use</div>
                             }
                         </Form.Group>
 

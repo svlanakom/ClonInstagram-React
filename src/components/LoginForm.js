@@ -1,11 +1,13 @@
 import React, { useState } from "react";
 import { Form, Button } from "react-bootstrap";
 import axios from "axios";
-import {port} from "../config"
+import { port } from '../config';
+import { useAuthDispatch } from "../context";
 
-function LoginForm({ modalIsOpen, setIsOpen, isLogin, setIsLogin }) {
+function LoginForm({ modalIsOpen, setIsOpen }) {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+    const authDispatch = useAuthDispatch();
 
     function onFormSubmit(event) {
         event.preventDefault();
@@ -13,9 +15,9 @@ function LoginForm({ modalIsOpen, setIsOpen, isLogin, setIsLogin }) {
             email, password
         }).then(response => {
             console.log(response.data);
-            localStorage.setItem('token', `Bearer ${response.data.token}`);
-            localStorage.setItem('email', response.data.email);
-            setIsLogin(true);
+            const userData = {email: response.data.email, token: `Bearer ${response.data.token}`};
+            localStorage.setItem('userData', JSON.stringify(userData));
+            authDispatch({ type: 'LOGIN', payload: userData });
             setIsOpen(false);
         });
     }
