@@ -1,33 +1,42 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Card, Col, Row, Button } from 'react-bootstrap';
 import axios from 'axios';
 import { port } from '../config';
 import { useAuthState } from '../context';
 
-function PostList({ modalIsOpen, setIsOpen, postToEdite, setPostToEdite }) {
-    const [posts, setPosts] = useState([]);
+function PostList({
+    modalIsOpen,
+    setIsOpen,
+    postToEdite,
+    setPostToEdite,
+    posts,
+    setPosts
+}) {
     const authState = useAuthState();
 
     const deletePost = (event) => {
-        axios.delete(`/deletepost/${event.target.dataset.id}`, {
-            headers: {
-                'Authorization': authState.token
-            }
-        });
-    };
-
-    useEffect(() => {
-        axios.get(`${port}/posts`, {
+        axios.delete(`${port}/deletepost/${event.target.dataset.id}`, {
             headers: {
                 'Authorization': authState.token
             }
         }).then(response => {
+            setPosts(posts.filter(post => post._id !== event.target.dataset.id))
+        });
+    };
+
+    useEffect(() => {
+        const userData = JSON.parse(localStorage.getItem('userData'));
+        axios.get(`${port}/posts`, {
+            headers: {
+                'Authorization': userData.token ?? ''
+            }
+        }).then(response => {
             setPosts(response.data);
         }).catch(error => {
-            console.log(error.response?.status);
+            console.log(error.response?.status ?? error);
         });
-    }, [posts, setPosts]);
+    }, [posts.length]);
 
     return (
         <>

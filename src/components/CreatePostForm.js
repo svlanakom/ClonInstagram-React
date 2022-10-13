@@ -3,18 +3,20 @@ import axios from 'axios';
 import { Form, Button } from 'react-bootstrap';
 
 import { useAuthState } from '../context';
+import { port } from '../config';
 
-function CreatePostForm() {
+function CreatePostForm({ posts, setPosts }) {
     const authState = useAuthState();
 
     const onFormSubmit = (event) => {
         event.preventDefault();
         const formData = new FormData(event.target);
-        axios.post("http://localhost:3003/createpost", formData, {
+        axios.post(`${port}/createpost`, formData, {
             headers: {
                 'Authorization': authState.token
             }
         }).then(response => {
+            setPosts([...posts, response.data]);
             event.target.reset();
         });
     }
