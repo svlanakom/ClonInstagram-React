@@ -17,6 +17,8 @@ import axios from "axios";
 import { useAuthDispatch } from '../context';
 
 import {port} from '../config';
+import ContactPage from "./ContactPage";
+import AboutPage from "./AboutPage";
 
 function App() {
   const [modalIsOpen, setIsOpen] = useState(false);
@@ -40,9 +42,6 @@ function App() {
     }
   }, [authDispatch]);
 
-  // function afterOpenModal() {
-  // }
-
   function afterCloseModal() {
     navigate(-1);
   }
@@ -57,14 +56,13 @@ function App() {
       <Container style={{ marginTop: 5 }}>
         <Routes>
           <Route path='/' element={<UserList modalIsOpen={modalIsOpen} setIsOpen={setIsOpen} userToEdite={userToEdite} setUserToEdite={setUserToEdite} />} />
-          <Route path='/about' element={<div>About page</div>} />
-          <Route path='/contact' element={<div>Contact page</div>} />
+          <Route path='/about' element={<AboutPage/>} />
+          <Route path='/contact' element={<ContactPage/>} />
           <Route path='/posts' element={<PostsPage modalIsOpen={modalIsOpen} setIsOpen={setIsOpen} postToEdite={postToEdite} setPostToEdite={setPostToEdite} />} />
         </Routes>
         <ReactModal
           style={{ width: '50%' }}
           isOpen={modalIsOpen}
-          // onAfterOpen={afterOpenModal}
           onAfterClose={afterCloseModal}
           onRequestClose={requestCloseModal}
           ariaHideApp={false}

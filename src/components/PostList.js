@@ -29,14 +29,14 @@ function PostList({
         const userData = JSON.parse(localStorage.getItem('userData'));
         axios.get(`${port}/posts`, {
             headers: {
-                'Authorization': userData.token ?? ''
+                'Authorization': userData?.token ?? ''
             }
         }).then(response => {
             setPosts(response.data);
         }).catch(error => {
             console.log(error.response?.status ?? error);
         });
-    }, [posts.length]);
+    }, [posts.length, setPosts]);
 
     return (
         <>

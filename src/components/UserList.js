@@ -40,7 +40,7 @@ function UserList({ modalIsOpen, setIsOpen, userToEdite, setUserToEdite }) {
     };
 
     return (<>
-        {authState.token &&
+        {authState.token ?
             <Table striped bordered hover className='mt-3'>
                 <thead>
                     <tr>
@@ -75,6 +75,8 @@ function UserList({ modalIsOpen, setIsOpen, userToEdite, setUserToEdite }) {
                         </tr>)}
                 </tbody>
             </Table>
+            :
+            <h3 className="d-flex justify-content-center mt-5">User list is not avaliable</h3>
         }
     </>
     );
